@@ -1,0 +1,34 @@
+{
+  "name": "movie_api",
+  "version": "1.0.0",
+  "description": "A simple Express-based REST API for managing and retrieving movie information",
+  "keywords": [
+    "movie",
+    "api",
+    "express",
+    "node",
+    "rest",
+    "restapi",
+    "backend"
+  ],
+  "homepage": "https://github.com/sagunanathani/movie_api#readme",
+  "bugs": {
+    "url": "https://github.com/sagunanathani/movie_api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sagunanathani/movie_api.git"
+  },
+  "license": "ISC",
+  "author": "Saguna Nathani",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0"
+  }
+}

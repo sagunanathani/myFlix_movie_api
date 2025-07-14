@@ -16,5 +16,92 @@
       Registered users can sign up, update their profiles, and maintain a
       personalized list of favorite movies.
     </p>
+        <h2>API Endpoints</h2>
+    <table border="1" cellpadding="10" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Request</th>
+          <th>URL</th>
+          <th>Method</th>
+          <th>Request Body (if applicable)</th>
+          <th>Response</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Get all movies</td>
+          <td>/movies</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>List of all movies</td>
+          <td>Returns an array of all movies</td>
+        </tr>
+        <tr>
+          <td>Get movie by title</td>
+          <td>/movies/:title</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>Movie object</td>
+          <td>Returns data about a single movie by title</td>
+        </tr>
+        <tr>
+          <td>Get genre by name</td>
+          <td>/genres/:name</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>Genre description</td>
+          <td>Returns description of a genre by name</td>
+        </tr>
+        <tr>
+          <td>Get director by name</td>
+          <td>/directors/:name</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>Director details</td>
+          <td>Returns bio, birth year, and death year of a director</td>
+        </tr>
+        <tr>
+          <td>Register new user</td>
+          <td>/users</td>
+          <td>POST</td>
+          <td>{ "username": "user1", "password": "123", "email": "user@example.com" }</td>
+          <td>Confirmation message</td>
+          <td>Allows a new user to register</td>
+        </tr>
+        <tr>
+          <td>Update user info</td>
+          <td>/users/:username</td>
+          <td>PUT</td>
+          <td>{ "username": "newname", "email": "new@example.com" }</td>
+          <td>Updated user data</td>
+          <td>Allows a user to update their info</td>
+        </tr>
+        <tr>
+          <td>Add movie to favorites</td>
+          <td>/users/:username/favorites/:movieTitle</td>
+          <td>POST</td>
+          <td>None</td>
+          <td>Confirmation message</td>
+          <td>Adds a movie to a user's favorite list</td>
+        </tr>
+        <tr>
+          <td>Remove movie from favorites</td>
+          <td>/users/:username/favorites/:movieTitle</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>Confirmation message</td>
+          <td>Removes a movie from a user's favorite list</td>
+        </tr>
+        <tr>
+          <td>Deregister user</td>
+          <td>/users/:username</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>Confirmation message</td>
+          <td>Removes a user account</td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>

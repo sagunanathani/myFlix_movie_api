@@ -16,7 +16,7 @@
       Registered users can sign up, update their profiles, and maintain a
       personalized list of favorite movies.
     </p>
-        <h2>API Endpoints</h2>
+    <h2>API Endpoints</h2>
     <table border="1" cellpadding="10" cellspacing="0">
       <thead>
         <tr>
@@ -54,6 +54,14 @@
           <td>Returns description of a genre by name</td>
         </tr>
         <tr>
+          <td>Get movies by genre and director</td>
+          <td>/movies?genre=Comedy&director=Wes%20Anderson</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>Filtered movie list</td>
+          <td>Returns movies that match both genre and director</td>
+        </tr>
+        <tr>
           <td>Get director by name</td>
           <td>/directors/:name</td>
           <td>GET</td>
@@ -65,7 +73,10 @@
           <td>Register new user</td>
           <td>/users</td>
           <td>POST</td>
-          <td>{ "username": "user1", "password": "123", "email": "user@example.com" }</td>
+          <td>
+            { "username": "user1", "password": "123", "email":
+            "user@example.com" }
+          </td>
           <td>Confirmation message</td>
           <td>Allows a new user to register</td>
         </tr>
@@ -76,6 +87,14 @@
           <td>{ "username": "newname", "email": "new@example.com" }</td>
           <td>Updated user data</td>
           <td>Allows a user to update their info</td>
+        </tr>
+        <tr>
+          <td>Update movie info</td>
+          <td>/movies/:title</td>
+          <td>PUT</td>
+          <td>{ "Genre.Description": "Updated description" }</td>
+          <td>Updated movie object</td>
+          <td>Updates details of a specific movie</td>
         </tr>
         <tr>
           <td>Add movie to favorites</td>

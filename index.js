@@ -111,10 +111,13 @@ app.post("/movies", async (req, res) => {
 // Route: Register a new user
 app.post("/users", async (req, res) => {
   try {
+    // Check if username already exists
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
       return res.status(400).send(`${req.body.username} already exists`);
     }
+
+    // Create new user
     const newUser = await User.create({
       username: req.body.username,
       password: req.body.password,
@@ -122,7 +125,10 @@ app.post("/users", async (req, res) => {
       birthday: req.body.birthday,
     });
 
-    res.status(201).json(newUser);
+    // Only return selected fields (not the password)
+    const { username, email, birthday } = newUser;
+    res.status(201).json({ username, email, birthday });
+
   } catch (err) {
     res.status(500).send("Error: " + err.message);
   }

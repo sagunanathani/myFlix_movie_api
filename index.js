@@ -2,10 +2,12 @@
 // This allows us to use Express functions and features
 // Require express and other needed modules
 const express = require("express");
-const morgan = require("morgan"); // Step 6: Require Morgan middleware
+const morgan = require("morgan"); // // Step 6: Require Morgan middleware - Logs HTTP requests (for debugging and analytics)
+const mongoose = require("mongoose"); // MongoDB ODM (object data modeling)- Import Mongoose and models to connect REST API with MongoDB
 
-// Import Mongoose and models to connect REST API with MongoDB
-const mongoose = require("mongoose");
+const bcrypt = require('bcrypt');
+
+// Import Movie and User models from models.js
 const { Movie, User } = require("./models"); // 👈 Import models
 
 // movieappDB
@@ -36,6 +38,13 @@ app.use(express.static("public"));
 // Middleware to parse incoming JSON requests
 app.use(express.json());
 
+//  after middleware is configured
+require('./auth')(app);  // pass app directly
+
+// Passport setup (important to do *after* auth import)
+const passport = require('passport');
+require('./passport');
+
 // Route: Default home message
 app.get("/", (req, res) => {
   res.send("Welcome to the Movie API!");
@@ -43,7 +52,7 @@ app.get("/", (req, res) => {
 
 // Example route using the Movie model
 // Get all movies
-app.get("/movies", async (req, res) => {
+app.get("/movies", passport.authenticate('jwt', { session: false }), async (req, res) => {
   console.log("Route was triggered"); // Confirmed route is called
   try {
     const movies = await Movie.find();
@@ -116,11 +125,13 @@ app.post("/users", async (req, res) => {
     if (existingUser) {
       return res.status(400).send(`${req.body.username} already exists`);
     }
+     // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     // Create new user
     const newUser = await User.create({
       username: req.body.username,
-      password: req.body.password,
+      password: hashedPassword,
       email: req.body.email,
       birthday: req.body.birthday,
     });
@@ -135,12 +146,16 @@ app.post("/users", async (req, res) => {
 });
 
 // Route: Update a user's info
-app.put("/users/:username", async (req, res) => {
+app.put("/users/:username", passport.authenticate('jwt', { session: false }), async (req, res) => {
+  // Use lowercase 'username' consistently - conditions to check
+  if (req.user.username !== req.params.username) {
+    return res.status(400).send('Permission denied');
+  }
   try {
     const updatedUser = await User.findOneAndUpdate(
       { username: req.params.username },
       { $set: req.body },
-      { new: true }
+      { new: true } //This line makes sure that the updated document is returned
     );
     res.json(updatedUser);
   } catch (err) {
@@ -148,8 +163,9 @@ app.put("/users/:username", async (req, res) => {
   }
 });
 
+
 // Route: Add movie to user's favorites
-app.post("/users/:username/movies/:movieID", async (req, res) => {
+app.post("/users/:username/movies/:movieID", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const updatedUser = await User.findOneAndUpdate(
       { username: req.params.username },

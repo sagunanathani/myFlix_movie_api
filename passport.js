@@ -3,6 +3,7 @@ const passport = require("passport"),
   Models = require("./models"),
   passportJWT = require("passport-jwt");
 bcrypt = require("bcrypt");
+const { User } = require("./models");
 
 let Users = Models.User,
   JWTStrategy = passportJWT.Strategy,
@@ -18,19 +19,19 @@ passport.use(
     async (username, password, callback) => {
       try {
         const user = await Users.findOne({ username: username });
-        console.log("Found user:", user); // Log user whether found or not
-        console.log("Login request for username:", username);
-
+        console.log("Found user:", user); // Might show password hash in logs — be cautious!
+        console.log(`Login attempt: ${username}`);
         if (!user) {
+          console.log('User not found.');
           return callback(null, false, {
             message: "Incorrect username or password.",
           });
         }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        console.log("Password matches:", isMatch); //  Log result of password check
-        if (!isMatch) {
-          return callback(null, false, { message: "Incorrect password." });
+        if (!user.validatePassword(password)) {
+          console.log("Incorrect password");
+          return callback(null, false, {
+            message: "Incorrect username or password.",
+          });
         }
 
         return callback(null, user);

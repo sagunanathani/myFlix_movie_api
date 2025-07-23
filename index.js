@@ -4,8 +4,9 @@
 const express = require("express");
 const morgan = require("morgan"); // // Step 6: Require Morgan middleware - Logs HTTP requests (for debugging and analytics)
 const mongoose = require("mongoose"); // MongoDB ODM (object data modeling)- Import Mongoose and models to connect REST API with MongoDB
-
-const bcrypt = require('bcrypt');
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+const { check, validationResult } = require("express-validator");
 
 // Import Movie and User models from models.js
 const { Movie, User } = require("./models"); // 👈 Import models
@@ -23,7 +24,7 @@ mongoose.connection.on("error", (err) => {
 
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB successfully");
-  console.log("Using DB:", mongoose.connection.name); 
+  console.log("Using DB:", mongoose.connection.name);
 });
 
 const app = express();
@@ -38,12 +39,37 @@ app.use(express.static("public"));
 // Middleware to parse incoming JSON requests
 app.use(express.json());
 
+// CORS — Add this BEFORE auth
+// Define a list of allowed origins for CORS (Cross-Origin Resource Sharing)
+// Only requests coming from these origins will be allowed to access your API
+let allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
+
+// Configure CORS middleware
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // If no origin (like in Postman or curl), allow the request
+      if (!origin) return callback(null, true);
+
+      // If the origin is not in the allowed list, block it
+      if (allowedOrigins.indexOf(origin) === -1) {
+        // Customize the error message for unauthorized origins
+        let message = "CORS policy does not allow access from origin " + origin;
+        return callback(new Error(message), false); // Deny the request
+      }
+
+      // If the origin is allowed, accept the request
+      return callback(null, true);
+    },
+  })
+);
+
 //  after middleware is configured
-require('./auth')(app);  // pass app directly
+require("./auth")(app); // pass app directly
 
 // Passport setup (important to do *after* auth import)
-const passport = require('passport');
-require('./passport');
+const passport = require("passport");
+require("./passport");
 
 // Route: Default home message
 app.get("/", (req, res) => {
@@ -52,16 +78,20 @@ app.get("/", (req, res) => {
 
 // Example route using the Movie model
 // Get all movies
-app.get("/movies", passport.authenticate('jwt', { session: false }), async (req, res) => {
-  console.log("Route was triggered"); // Confirmed route is called
-  try {
-    const movies = await Movie.find();
-    console.log("Fetched movies:", movies); //Confirmed data retrieval
-    res.json(movies);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+app.get(
+  "/movies",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    console.log("Route was triggered"); // Confirmed route is called
+    try {
+      const movies = await Movie.find();
+      console.log("Fetched movies:", movies); //Confirmed data retrieval
+      res.json(movies);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
   }
-});
+);
 
 // Endpoint: Return movie data by title
 app.get("/movies/:title", async (req, res) => {
@@ -118,65 +148,111 @@ app.post("/movies", async (req, res) => {
 });
 
 // Route: Register a new user
-app.post("/users", async (req, res) => {
-  try {
-    // Check if username already exists
-    const existingUser = await User.findOne({ username: req.body.username });
-    if (existingUser) {
-      return res.status(400).send(`${req.body.username} already exists`);
+app.post(
+  "/users",
+  [
+    check("username", "Username is required").isLength({ min: 5 }),
+    check(
+      "username",
+      "Username contains non-alphanumeric characters - not allowed."
+    ).isAlphanumeric(),
+    check("password", "Password is required").not().isEmpty(),
+    check("email", "Email does not appear to be valid").isEmail(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    //Error handling with validationResult()
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
-     // Hash the password before saving
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    try {
+      // Check if username already exists
+      const existingUser = await User.findOne({ username: req.body.username });
+      if (existingUser) {
+        return res.status(400).send(`${req.body.username} already exists`);
+      }
+      // Hash the password before saving
+      const hashedPassword = User.hashPassword(req.body.password);
 
-    // Create new user
-    const newUser = await User.create({
-      username: req.body.username,
-      password: hashedPassword,
-      email: req.body.email,
-      birthday: req.body.birthday,
-    });
+      // Create new user
+      const newUser = await User.create({
+        username: req.body.username,
+        password: hashedPassword,
+        email: req.body.email,
+        birthday: req.body.birthday,
+      });
 
-    // Only return selected fields (not the password)
-    const { username, email, birthday } = newUser;
-    res.status(201).json({ username, email, birthday });
-
-  } catch (err) {
-    res.status(500).send("Error: " + err.message);
+      // Only return selected fields (not the password)
+      //const { username, email, birthday } = newUser;
+      res.status(201).json({
+        username: newUser.username,
+        email: newUser.email,
+        birthday: newUser.birthday,
+      });
+    } catch (err) {
+      res.status(500).send("Error: " + err.message);
+    }
   }
-});
+);
 
 // Route: Update a user's info
-app.put("/users/:username", passport.authenticate('jwt', { session: false }), async (req, res) => {
-  // Use lowercase 'username' consistently - conditions to check
-  if (req.user.username !== req.params.username) {
-    return res.status(400).send('Permission denied');
-  }
-  try {
-    const updatedUser = await User.findOneAndUpdate(
-      { username: req.params.username },
-      { $set: req.body },
-      { new: true } //This line makes sure that the updated document is returned
-    );
-    res.json(updatedUser);
-  } catch (err) {
-    res.status(500).send("Error: " + err.message);
-  }
-});
+app.put(
+  "/users/:username",
+  [
+    check("username", "Username is required").isLength({ min: 5 }),
+    check(
+      "username",
+      "Username contains non-alphanumeric characters - not allowed."
+    ).isAlphanumeric(),
+    check("password", "Password is required").not().isEmpty(),
+    check("email", "Email does not appear to be valid").isEmail(),
+  ],
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const errors = validationResult(req);
 
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    // Use lowercase 'username' consistently - conditions to check
+    if (req.user.username !== req.params.username) {
+      return res.status(400).send("Permission denied");
+    }
+    try {
+      const updatedUser = await User.findOneAndUpdate(
+        { username: req.params.username },
+        { $set: req.body },
+        { new: true } //This line makes sure that the updated document is returned
+      );
+      // Check if user was not found
+      if (!updatedUser) {
+        return res.status(404).send("User not found");
+      }
+      // If found, send updated user data
+      res.json(updatedUser);
+    } catch (err) {
+      res.status(500).send("Error: " + err.message);
+    }
+  }
+);
 
 // Route: Add movie to user's favorites
-app.post("/users/:username/movies/:movieID", passport.authenticate('jwt', { session: false }), async (req, res) => {
-  try {
-    const updatedUser = await User.findOneAndUpdate(
-      { username: req.params.username },
-      { $addToSet: { favoriteMovies: req.params.movieID } },
-      { new: true }
-    );
-    res.json(updatedUser);
-  } catch (err) {
-    res.status(500).send("Error: " + err.message);
+app.post(
+  "/users/:username/movies/:movieID",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const updatedUser = await User.findOneAndUpdate(
+        { username: req.params.username },
+        { $addToSet: { favoriteMovies: req.params.movieID } },
+        { new: true }
+      );
+      res.json(updatedUser);
+    } catch (err) {
+      res.status(500).send("Error: " + err.message);
+    }
   }
-});
+);
 
 // Route: Remove movie from user's favorites
 app.delete("/users/:username/movies/:movieID", async (req, res) => {

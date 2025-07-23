@@ -1,5 +1,6 @@
 //Mongoose schemas and models in model.js file
 const mongoose = require("mongoose");
+const bcrypt = require('bcrypt');
 
 // Mongoose schema: keys = field names, values = data types
 // Movie Schema
@@ -29,6 +30,15 @@ let userSchema = mongoose.Schema({
   birthday: Date,
   favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Movie" }],
 });
+// 🔐 Hash password before saving user
+userSchema.statics.hashPassword = (password) => {
+  return bcrypt.hashSync(password, 10);
+};
+
+// Compare hashed passwords on login
+userSchema.methods.validatePassword = function(password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
 // Creates "movies" and "users" collections in MongoDB (stored in /data/db)
 // Create models

@@ -3,6 +3,9 @@
 // Require express and other needed modules
 const express = require("express");
 const morgan = require("morgan"); // // Step 6: Require Morgan middleware - Logs HTTP requests (for debugging and analytics)
+//This actually loads the .env file into process.env
+require('dotenv').config();
+
 const mongoose = require("mongoose"); // MongoDB ODM (object data modeling)- Import Mongoose and models to connect REST API with MongoDB
 const cors = require("cors");
 const bcrypt = require("bcrypt");
@@ -13,10 +16,14 @@ const { Movie, User } = require("./models"); // 👈 Import models
 
 // movieappDB
 // Connect to MongoDB database
-mongoose.connect("mongodb://localhost:27017/movieAppDB", {
+// local connection
+/* mongoose.connect("mongodb://localhost:27017/movieAppDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+}); */
+
+// Atlas connection
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connection.on("error", (err) => {
   console.error("MongoDB connection error:", err);
@@ -288,7 +295,10 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server and listen on port 8080
+mongoose.connection.once("open", () => {
+  console.log("MongoDB connected ✅");
 const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0', () => {
-  console.log('Listening on Port ' + port);
+app.listen(port, "0.0.0.0", () => {
+  console.log("Listening on Port " + port);
+});
 });

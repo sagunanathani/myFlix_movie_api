@@ -23,7 +23,8 @@ const { Movie, User } = require("./models"); // 👈 Import models
 }); */
 
 // Atlas connection
-mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI);
 
 mongoose.connection.on("error", (err) => {
   console.error("MongoDB connection error:", err);

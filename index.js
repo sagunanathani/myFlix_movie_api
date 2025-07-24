@@ -154,7 +154,8 @@ app.post("/movies", async (req, res) => {
   }
 });
 
-// Route: Register a new user
+
+/* // Route: Register a new user
 app.post(
   "/users",
   [
@@ -198,6 +199,57 @@ app.post(
       });
     } catch (err) {
       res.status(500).send("Error: " + err.message);
+    }
+  }
+); */
+
+
+app.post(
+  "/users",
+  [
+    check("username", "Username is required").isLength({ min: 5 }),
+    check("username", "Username must be alphanumeric").isAlphanumeric(),
+    check("password", "Password is required").not().isEmpty(),
+    check("email", "Email does not appear to be valid").isEmail(),
+  ],
+  async (req, res) => {
+    console.log("Incoming request to /users:", req.body);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    try {
+      const { username, password, email, birthday } = req.body;
+
+      // Check if username already exists
+      const existingUser = await User.findOne({ username });
+      if (existingUser) {
+        return res.status(400).send(`${username} already exists`);
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10); // ✅ use bcrypt directly
+
+      // Create new user
+      const newUser = await User.create({
+        username,
+        password: hashedPassword,
+        email,
+        birthday,
+      });
+
+      console.log("✅ User created:", newUser);
+
+      // Respond with selected fields
+      res.status(201).json({
+        username: newUser.username,
+        email: newUser.email,
+        birthday: newUser.birthday,
+      });
+    } catch (err) {
+      console.error("Crash in /users:", err);
+      res.status(500).send("Server Error: " + err.message);
     }
   }
 );
@@ -295,10 +347,26 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server and listen on port 8080
-mongoose.connection.once("open", () => {
+/* mongoose.connection.once("open", () => {
   console.log("MongoDB connected ✅");
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
   console.log("Listening on Port " + port);
 });
+}); */
+
+console.log("🔧 Starting server...");
+
+mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+mongoose.connection.once("open", () => {
+  console.log("✅ MongoDB connected");
+
+  const port = process.env.PORT || 8080;
+  app.listen(port, () => {
+    console.log(`🚀 Server running on port ${port}`);
+  });
 });

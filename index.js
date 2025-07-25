@@ -21,19 +21,6 @@ const { Movie, User } = require("./models"); // 👈 Import models
   useUnifiedTopology: true,
 }); */
 
-// Atlas connection
-//mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect(process.env.CONNECTION_URI);
-
-mongoose.connection.on("error", (err) => {
-  console.error("MongoDB connection error:", err);
-});
-
-mongoose.connection.once("open", () => {
-  console.log("Connected to MongoDB successfully");
-  console.log("Using DB:", mongoose.connection.name);
-});
-
 const app = express();
 
 // Middleware: Log all requests using Morgan
@@ -295,14 +282,21 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something went wrong!");
 });
 
-// Start the server and listen on port 8080
-console.log("🔧 Starting server...");
+// ✅ START SERVER FIRST!
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${port}`);
+});
+
+// 📦 THEN CONNECT TO MONGODB - // Atlas connection
+mongoose.connect(process.env.CONNECTION_URI);
+
+mongoose.connection.on("error", (err) => {
+  console.error("❌ MongoDB connection error:", err);
+});
 
 mongoose.connection.once("open", () => {
   console.log("✅ MongoDB connected");
-
-  const port = process.env.PORT || 8080;
-  app.listen(port, "0.0.0.0", () => {
-    console.log(`🚀 Server running on port ${port}`);
-  });
+  console.log("Using DB:", mongoose.connection.name);
 });
+

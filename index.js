@@ -1,18 +1,17 @@
 // Import the Express module and assign it to a constant called 'express'
 // This allows us to use Express functions and features
 // Require express and other needed modules
+  require("dotenv").config();         // Load env vars - //This actually loads the .env file into process.env
 const express = require("express");
-const morgan = require("morgan"); // // Step 6: Require Morgan middleware - Logs HTTP requests (for debugging and analytics)
-//This actually loads the .env file into process.env
-require("dotenv").config();
-
 const mongoose = require("mongoose"); // MongoDB ODM (object data modeling)- Import Mongoose and models to connect REST API with MongoDB
+// Import Movie and User models from models.js
+const { Movie, User } = require("./models"); // 👈 Import models
+
+const morgan = require("morgan"); // // Step 6: Require Morgan middleware - Logs HTTP requests (for debugging and analytics)
+
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const { check, validationResult } = require("express-validator");
-
-// Import Movie and User models from models.js
-const { Movie, User } = require("./models"); // 👈 Import models
 
 // movieappDB
 // Connect to MongoDB database - local connection
@@ -23,47 +22,30 @@ const { Movie, User } = require("./models"); // 👈 Import models
 
 const app = express();
 
-// Middleware: Log all requests using Morgan
-app.use(morgan("common")); // also use 'dev', 'tiny', etc.
+function initializeApp() {
+  // Middleware
+  app.use(morgan("common"));
+  app.use(express.static("public"));
+  app.use(express.json());
 
-// Middleware: Serve static files from the "public" folder
-app.use(express.static("public"));
-
-// This allows access to req.body for POST and PUT methods
-// Middleware to parse incoming JSON requests
-app.use(express.json());
-
-// CORS — Add this BEFORE auth
-// Define a list of allowed origins for CORS (Cross-Origin Resource Sharing)
-// Only requests coming from these origins will be allowed to access your API
-let allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
-
-// Configure CORS middleware
-app.use(
-  cors({
+  // CORS
+  const allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
+  app.use(cors({
     origin: (origin, callback) => {
-      // If no origin (like in Postman or curl), allow the request
       if (!origin) return callback(null, true);
-
-      // If the origin is not in the allowed list, block it
       if (allowedOrigins.indexOf(origin) === -1) {
-        // Customize the error message for unauthorized origins
-        let message = "CORS policy does not allow access from origin " + origin;
-        return callback(new Error(message), false); // Deny the request
+        return callback(new Error("CORS policy does not allow access from origin " + origin), false);
       }
-
-      // If the origin is allowed, accept the request
       return callback(null, true);
-    },
-  })
-);
+    }
+  }));
 
-//  after middleware is configured
-require("./auth")(app); // pass app directly
+  // Authentication
+  require("./auth")(app);            // Auth setup
+  // Passport setup (important to do *after* auth import)
+  const passport = require("passport");
+  require("./passport");             // Passport strategies
 
-// Passport setup (important to do *after* auth import)
-const passport = require("passport");
-require("./passport");
 
 // Route: Default home message
 app.get("/", (req, res) => {
@@ -282,21 +264,25 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something went wrong!");
 });
 
-// ✅ START SERVER FIRST!
+}
+
 const port = process.env.PORT || 8080;
-app.listen(port, "0.0.0.0", () => {
-  console.log(`🚀 Server running on port ${port}`);
-});
 
-// 📦 THEN CONNECT TO MONGODB - // Atlas connection
-mongoose.connect(process.env.CONNECTION_URI);
+// 📦 Connect to MongoDB first
+mongoose.set('strictQuery', false);
+mongoose.connect(process.env.CONNECTION_URI)
+  .then(() => {
+    console.log("✅ MongoDB connected");
+    console.log("Using DB:", mongoose.connection.name);
 
-mongoose.connection.on("error", (err) => {
-  console.error("❌ MongoDB connection error:", err);
-});
+     // ✅ Initialize the app AFTER DB is connected
+    initializeApp();
 
-mongoose.connection.once("open", () => {
-  console.log("✅ MongoDB connected");
-  console.log("Using DB:", mongoose.connection.name);
-});
-
+    // ✅ Start the server now that DB is ready
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`🚀 Server running on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+  });

@@ -1,25 +1,22 @@
 // Import the Express module and assign it to a constant called 'express'
 // This allows us to use Express functions and features
 // Require express and other needed modules
-  require("dotenv").config();         // Load env vars - //This actually loads the .env file into process.env
-const express = require("express");
-const mongoose = require("mongoose"); // MongoDB ODM (object data modeling)- Import Mongoose and models to connect REST API with MongoDB
-// Import Movie and User models from models.js
-const { Movie, User } = require("./models"); // 👈 Import models
 
-const morgan = require("morgan"); // // Step 6: Require Morgan middleware - Logs HTTP requests (for debugging and analytics)
+// Load environment variables from .env
+  require("dotenv").config();       
 
-const cors = require("cors");
-const bcrypt = require("bcrypt");
-const { check, validationResult } = require("express-validator");
+// Import dependencies
+const express = require("express");  // Express framework
+const mongoose = require("mongoose");  // MongoDB ORM
+const morgan = require("morgan"); //Step 6: Require Morgan middleware - Logs HTTP requests (for debugging and analytics)
+const cors = require("cors");  // Cross-origin handling
+const bcrypt = require("bcrypt");  // Password hashing
+const { check, validationResult } = require("express-validator");  // Input validation
 
-// movieappDB
-// Connect to MongoDB database - local connection
-/* mongoose.connect("mongodb://localhost:27017/movieAppDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}); */
+// Import models
+const { Movie, User } = require("./models");
 
+// Initialize the Express app
 const app = express();
 
 function initializeApp() {

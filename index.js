@@ -12,6 +12,7 @@ const morgan = require("morgan"); //Step 6: Require Morgan middleware - Logs HTT
 const cors = require("cors"); // Cross-origin handling
 const bcrypt = require("bcrypt"); // Password hashing
 const { check, validationResult } = require("express-validator"); // Input validation
+const path = require("path");
 
 // Import models
 const { Movie, User } = require("./models");
@@ -29,7 +30,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 function initializeApp() {
   // Middleware
   app.use(morgan("common"));
-  app.use(express.static("public"));
+  app.use(express.static(path.join(__dirname, "public")));
   app.use(express.json());
 
   // CORS
@@ -61,6 +62,11 @@ function initializeApp() {
   /* app.get("/", (req, res) => {
     res.send("Welcome to the Movie API!");
   }); */
+
+// Route for homepage
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
   app.get("/", (req, res) => {
     res.send(`

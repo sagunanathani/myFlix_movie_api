@@ -26,10 +26,11 @@ let movieSchema = mongoose.Schema({
 let userSchema = mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  birthday: Date,
+  email: { type: String, required: true, unique: true, match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address'] },
+  birthday: { type: Date, default: null },
   favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Movie" }],
 });
+
 // 🔐 Hash password before saving user
 userSchema.statics.hashPassword = (password) => {
   return bcrypt.hashSync(password, 10);

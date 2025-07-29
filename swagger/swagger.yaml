@@ -1,0 +1,224 @@
+openapi: 3.0.0
+info:
+  title: Movie API
+  version: 1.0.0
+paths:
+  /movies:
+    get:
+      summary: Get all movies
+      description: Returns a list of all movies.
+      responses:
+        '200':
+          description: A list of movies in JSON format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+
+  /movies/{title}:
+    get:
+      summary: Get movie by title
+      description: Returns details about a single movie by title.
+      parameters:
+        - name: title
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Movie details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+
+  /genres/{name}:
+    get:
+      summary: Get genre by name
+      description: Returns genre details by name.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Genre details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+
+  /directors/{name}:
+    get:
+      summary: Get director by name
+      description: Returns director details by name.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Director details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Director'
+
+  /users:
+    post:
+      summary: Register a new user
+      description: Creates a new user account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created user object
+
+
+  /users/{username}/movies/{movieID}:
+    post:
+      summary: Add movie to favorites
+      description: Adds a movie to the user's favorite list.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: movieID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated user object with favorite movie
+          
+  /users/{username}:
+    put:
+      summary: Update user
+      description: Updates user information.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Updated user object
+
+    delete:
+      summary: Delete user
+      description: Deregisters a user.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deleted
+
+    delete:
+      summary: Remove movie from favorites
+      description: Removes a movie from the user's favorite list.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: movieID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated user object without the removed movie
+
+components:
+  schemas:
+    Movie:
+      type: object
+      properties:
+        Title:
+          type: string
+        Description:
+          type: string
+        Genre:
+          $ref: '#/components/schemas/Genre'
+        Director:
+          $ref: '#/components/schemas/Director'
+        Actors:
+          type: array
+          items:
+            type: string
+        ImagePath:
+          type: string
+        ReleaseYear:
+          type: integer
+        Featured:
+          type: boolean
+        Rating:
+          type: number
+
+    Genre:
+      type: object
+      properties:
+        Name:
+          type: string
+        Description:
+          type: string
+
+    Director:
+      type: object
+      properties:
+        Name:
+          type: string
+        BirthYear:
+          type: integer
+
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        birthday:
+          type: string
+          format: date-time
+        favoriteMovies:
+          type: array
+          items:
+            type: string
+
+    UserUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string

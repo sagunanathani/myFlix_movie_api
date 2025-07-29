@@ -2,147 +2,169 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Movie API Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>🎬 Movie API Documentation</title>
   </head>
-  <h1>Welcome to the Movie API Documentation</h1>
-  <p>
-    The MyFlix API allows users to access information about different movies,
-    directors, and genres. Users are able to sign up, update their personal
-    information, and create a list of their favorite movies.
-  </p>
-  <p>
-    Registered users can sign up, update their profiles, and maintain a
-    personalized list of favorite movies.
-  </p>
   <body>
+    <h1>🎬 Movie API Documentation</h1>
+    <p>
+      The MyFlix RESTful API lets users explore movies, directors, and genres.
+      Registered users can sign up, update their profiles, and manage a list of
+      favorite movies. Responses are returned in JSON format.
+    </p>
+    <p>
+      The API is hosted on Heroku and uses MongoDB Atlas for secure and scalable
+      data storage.
+    </p>
+    <hr />
+
     <section>
-      <h2>GET /movies</h2>
-      <p>Returns a list of all movies in the database.</p>
+      <h2>
+        <span class="method">GET</span> <span class="endpoint">/movies</span>
+      </h2>
+      <p><strong>Description:</strong> Returns a list of all movies.</p>
       <p><strong>Method:</strong> GET</p>
-      <p><strong>Response:</strong></p>
-      <pre>
-[
-  {
-    "title": "Inception",
-    "description": "A thief who steals corporate secrets...",
-    "genre": { "name": "Sci-Fi", "description": "Science fiction" },
-    "director": { "name": "Christopher Nolan", "bio": "...", "birthYear": 1970 },
-    "releaseYear": 2010,
-    "featured": true
-  }
-]
-    </pre
-      >
+      <p><strong>Response Example:</strong></p>
+      <pre><code>{
+    "_id": "60f1c...",
+    "Title": "Inception",
+    "Description": "A thief enters dreams to implant ideas, navigating complex subconscious worlds.",
+    "Genre": { "Name": "Sci-Fi", "Description": "Futuristic and scientific concepts." },
+    "Director": { "Name": "Christopher Nolan", "BirthYear": 1970 },
+    "Actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page"],
+    "ImagePath": "/images/inception.jpg",
+    "ReleaseYear": 2010,
+    "Featured": true,
+    "Rating": 8.8
+}</code></pre>
     </section>
 
     <section>
-      <h2>GET /movies/:title</h2>
-      <p>Returns details about a single movie by title.</p>
+      <h2>
+        <span class="method">GET</span>
+        <span class="endpoint">/movies/:title</span>
+      </h2>
+      <p>
+        <strong>Description:</strong> Returns details about a single movie by
+        title.
+      </p>
       <p><strong>Method:</strong> GET</p>
-      <p><strong>Response:</strong></p>
-      <pre>
-{
-  "title": "Inception",
-  "description": "...",
-  "genre": { "name": "Sci-Fi", "description": "..." },
-  "director": { "name": "Christopher Nolan", "bio": "...", "birthYear": 1970 },
-  "releaseYear": 2010,
-  "featured": true
-}
-    </pre
-      >
+      <p><strong>Response Example:</strong></p>
+      <pre><code>{
+    "Title": "Inception",
+    "Description": "A thief enters dreams to implant ideas, navigating complex subconscious worlds.",
+    "Genre": { "Name": "Sci-Fi", "Description": "Futuristic and scientific concepts." },
+    "Director": { "Name": "Christopher Nolan", "BirthYear": 1970 },
+    "Actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page"],
+    "ImagePath": "/images/inception.jpg",
+    "ReleaseYear": 2010,
+    "Featured": true,
+    "Rating": 8.8
+}</code></pre>
     </section>
 
     <section>
-      <h2>GET /genres/:name</h2>
-      <p>Returns genre details by name.</p>
+      <h2>
+        <span class="method">GET</span>
+        <span class="endpoint">/genres/:name</span>
+      </h2>
+      <p><strong>Description:</strong> Returns genre details by name.</p>
       <p><strong>Method:</strong> GET</p>
-      <p><strong>Response:</strong></p>
-      <pre>
-{
-  "name": "Thriller",
-  "description": "Suspenseful and intense"
-}
-    </pre
-      >
+      <p><strong>Response Example:</strong></p>
+      <pre><code>{
+  "Name": "Thriller",
+  "Description": "Suspenseful and intense"
+}</code></pre>
     </section>
 
     <section>
-      <h2>GET /directors/:name</h2>
-      <p>Returns director details by name.</p>
+      <h2>
+        <span class="method">GET</span>
+        <span class="endpoint">/directors/:name</span>
+      </h2>
+      <p><strong>Description:</strong> Returns director details by name.</p>
       <p><strong>Method:</strong> GET</p>
-      <p><strong>Response:</strong></p>
-      <pre>
-{
-  "name": "Christopher Nolan",
-  "bio": "British-American filmmaker",
-  "birthYear": 1970
-}
-    </pre
-      >
+      <p><strong>Response Example:</strong></p>
+      <pre><code>{
+  "Name": "Christopher Nolan",
+  "BirthYear": "1970-07-30T00:00:00.000Z"
+}</code></pre>
     </section>
 
     <section>
-      <h2>POST /users</h2>
-      <p>Registers a new user.</p>
+      <h2>
+        <span class="method">POST</span> <span class="endpoint">/users</span>
+      </h2>
+      <p><strong>Description:</strong> Registers a new user.</p>
       <p><strong>Method:</strong> POST</p>
       <p><strong>Request Body:</strong></p>
-      <pre>
-{
-  "username": "johndoe",
-  "password": "secure123",
-  "email": "john@example.com",
-  "birthday": "1990-01-01"
-}
-    </pre
-      >
-      <p><strong>Response:</strong> Created user object</p>
+      <pre><code>{
+    "username": "kevinM",
+    "password": "KevPass321#",
+    "email": "kevin@example.com",
+    "birthday": "1989-05-25T00:00:00Z",
+    "favoriteMovies": ["64f24a8cf82e4a5b3c12345b"]
+}</code></pre>
+      <p><strong>Response:</strong> Created user object.</p>
     </section>
 
     <section>
-      <h2>PUT /users/:username</h2>
-      <p>Updates user information.</p>
+      <h2>
+        <span class="method">PUT</span>
+        <span class="endpoint">/users/:username</span>
+      </h2>
+      <p><strong>Description:</strong> Updates user information.</p>
       <p><strong>Method:</strong> PUT</p>
       <p><strong>Request Body:</strong></p>
-      <pre>
-{
-  "email": "newemail@example.com",
-  "password": "newpass456"
-}
-    </pre
-      >
-      <p><strong>Response:</strong> Updated user object</p>
+      <pre><code>{
+  "username": "kevinM",
+  "password": "KevPass321#"
+}</code></pre>
+      <p><strong>Response:</strong> Updated user object.</p>
     </section>
 
     <section>
-      <h2>POST /users/:username/movies/:movieID</h2>
-      <p>Adds a movie to the user's list of favorites.</p>
+      <h2>
+        <span class="method">POST</span>
+        <span class="endpoint">/users/:username/movies/:movieID</span>
+      </h2>
+      <p>
+        <strong>Description:</strong> Adds a movie to the user's list of
+        favorites.
+      </p>
       <p><strong>Method:</strong> POST</p>
-      <p><strong>Response:</strong> Updated user object with favoriteMovies</p>
+      <p><strong>Response:</strong> Updated user object with favoriteMovies.</p>
     </section>
 
     <section>
-      <h2>DELETE /users/:username/movies/:movieID</h2>
-      <p>Removes a movie from the user's list of favorites.</p>
+      <h2>
+        <span class="method">DELETE</span>
+        <span class="endpoint">/users/:username/movies/:movieID</span>
+      </h2>
+      <p>
+        <strong>Description:</strong> Removes a movie from the user's list of
+        favorites.
+      </p>
       <p><strong>Method:</strong> DELETE</p>
       <p>
-        <strong>Response:</strong> Updated user object without the removed movie
+        <strong>Response:</strong> Updated user object without the removed
+        movie.
       </p>
     </section>
 
     <section>
-      <h2>DELETE /users/:username</h2>
-      <p>Deregisters a user.</p>
+      <h2>
+        <span class="method">DELETE</span>
+        <span class="endpoint">/users/:username</span>
+      </h2>
+      <p><strong>Description:</strong> Deregisters a user.</p>
       <p><strong>Method:</strong> DELETE</p>
-      <p><strong>Response:</strong></p>
-      <pre>
-{
+      <p><strong>Response Example:</strong></p>
+      <pre><code>{
   "message": "User deleted",
-  "user": { ... }
-}
-    </pre
-      >
+  "user": { /* user object */ }
+}</code></pre>
     </section>
   </body>
 </html>

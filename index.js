@@ -158,13 +158,23 @@ function initializeApp() {
   app.post(
     "/users",
     [
-      check("username", "Username is required").isLength({ min: 5 }),
       check(
         "username",
         "Username contains non-alphanumeric characters - not allowed."
-      ).isAlphanumeric(),
-      check("password", "Password is required").not().isEmpty(),
-      check("email", "Email does not appear to be valid").isEmail(),
+      )
+        .isAlphanumeric()
+        .isLength({ min: 5 }),
+      check("email").isEmail().withMessage("Email must be valid"),
+      check("birthday").notEmpty().withMessage("Birthday is required"),
+      check("password")
+        .exists()
+        .withMessage("Password is required")
+        .custom((value) => {
+          if (!value || value.trim().length === 0) {
+            throw new Error("Password cannot be empty or just spaces");
+          }
+          return true;
+        }),
     ],
     async (req, res) => {
       const errors = validationResult(req);

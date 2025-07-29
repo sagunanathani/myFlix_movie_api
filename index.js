@@ -58,7 +58,7 @@ function initializeApp() {
   require("./passport"); // Passport strategies
 
   // Route: Default home message
-  /*   app.get("/", (req, res) => {
+  /* app.get("/", (req, res) => {
     res.send("Welcome to the Movie API!");
   }); */
 
@@ -69,12 +69,12 @@ function initializeApp() {
       <body>
         <h1>Welcome to the Movie API!</h1>
         <ul>
-          <li><a href="/public/documentation.html">HTML Documentation (Local)</a></li>
-          <li><a href="http://127.0.0.1:8080/api-docs/">Swagger Docs (Local)</a></li>
-          <li><a href="https://flix-fusion-api-movies-51cd1c6d37f8.herokuapp.com/documentation.html" target="_blank" 
+          <li>📄<a href="/public/documentation.html">HTML Documentation (Local)</a></li>
+          <li>🔧<a href="http://127.0.0.1:8080/api-docs/">Swagger Docs (Local)</a></li>
+          <li>🌐<a href="https://flix-fusion-api-movies-51cd1c6d37f8.herokuapp.com/documentation.html" target="_blank" 
               rel="noopener"
 >HTML Documentation (Deployed)</a></li>
-          <li><a href="https://flix-fusion-api-movies-51cd1c6d37f8.herokuapp.com/api-docs/" target="_blank" 
+          <li>🚀<a href="https://flix-fusion-api-movies-51cd1c6d37f8.herokuapp.com/api-docs/" target="_blank" 
               rel="noopener"
 >Swagger Docs (Deployed)</a></li>
         </ul>

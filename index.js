@@ -34,11 +34,15 @@ function initializeApp() {
   app.use(express.json());
 
   // CORS
-  const allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
+  const allowedOrigins = [
+    "http://localhost:8080",
+    "http://testsite.com",
+    "http://localhost:1234",
+  ];
   app.use(
     cors({
       origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
+        if (!origin) return callback(null, true); // allow requests like Postman
         if (allowedOrigins.indexOf(origin) === -1) {
           return callback(
             new Error(

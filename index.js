@@ -63,10 +63,10 @@ function initializeApp() {
     res.send("Welcome to the Movie API!");
   }); */
 
-// Route for homepage
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+  // Route for homepage
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+  });
 
   app.get("/", (req, res) => {
     res.send(`
@@ -93,7 +93,8 @@ app.get("/", (req, res) => {
   // Get all movies
   app.get(
     "/movies",
-    passport.authenticate("jwt", { session: false }),
+    // Temporarily removed JWT auth - to allow public access, React app can access the movie list without needing authentication.
+    // passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       console.log("Route was triggered"); // Confirmed route is called
       try {

@@ -2,10 +2,13 @@
   {
     "Title": "Inception",
     "Description": "A thief enters dreams to implant ideas, navigating complex subconscious worlds.",
-    "Genre": { "Name": "Sci-Fi", "Description": "Futuristic and scientific concepts." },
+    "Genre": {
+      "Name": "Sci-Fi",
+      "Description": "Futuristic and scientific concepts."
+    },
     "Director": { "Name": "Christopher Nolan", "BirthYear": 1970 },
     "Actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page"],
-    "ImagePath": "/images/inception.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/510+ApTtwaL._AC_.jpg",
     "ReleaseYear": 2010,
     "Featured": true,
     "Rating": 8.8
@@ -13,10 +16,13 @@
   {
     "Title": "The Shawshank Redemption",
     "Description": "A banker is imprisoned for a crime he didn't commit and forms a friendship that changes his life.",
-    "Genre": { "Name": "Drama", "Description": "Emotional and character-driven stories." },
+    "Genre": {
+      "Name": "Drama",
+      "Description": "Emotional and character-driven stories."
+    },
     "Director": { "Name": "Frank Darabont", "BirthYear": 1959 },
     "Actors": ["Tim Robbins", "Morgan Freeman"],
-    "ImagePath": "/images/shawshank.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_.jpg",
     "ReleaseYear": 1994,
     "Featured": true,
     "Rating": 9.3
@@ -27,7 +33,7 @@
     "Genre": { "Name": "Crime", "Description": "Criminal underworld, mafia." },
     "Director": { "Name": "Francis Ford Coppola", "BirthYear": 1939 },
     "Actors": ["Marlon Brando", "Al Pacino", "James Caan"],
-    "ImagePath": "/images/godfather.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/71xBLRBYOiL._AC_SY679_.jpg",
     "ReleaseYear": 1972,
     "Featured": true,
     "Rating": 9.2
@@ -35,10 +41,13 @@
   {
     "Title": "The Dark Knight",
     "Description": "Batman battles the Joker, who seeks to create chaos in Gotham.",
-    "Genre": { "Name": "Action", "Description": "High-stakes, intense sequences." },
+    "Genre": {
+      "Name": "Action",
+      "Description": "High-stakes, intense sequences."
+    },
     "Director": { "Name": "Christopher Nolan", "BirthYear": 1970 },
     "Actors": ["Christian Bale", "Heath Ledger"],
-    "ImagePath": "/images/dark_knight.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/51EbJjlLgTL._AC_.jpg",
     "ReleaseYear": 2008,
     "Featured": true,
     "Rating": 9.0
@@ -46,10 +55,13 @@
   {
     "Title": "Pulp Fiction",
     "Description": "Stories of crime and redemption intertwine in Los Angeles.",
-    "Genre": { "Name": "Crime", "Description": "Stylized, nonlinear narratives." },
+    "Genre": {
+      "Name": "Crime",
+      "Description": "Stylized, nonlinear narratives."
+    },
     "Director": { "Name": "Quentin Tarantino", "BirthYear": 1963 },
     "Actors": ["John Travolta", "Samuel L. Jackson", "Uma Thurman"],
-    "ImagePath": "/images/pulp_fiction.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/71c05lTE03L._AC_SY679_.jpg",
     "ReleaseYear": 1994,
     "Featured": false,
     "Rating": 8.9
@@ -57,10 +69,13 @@
   {
     "Title": "Forrest Gump",
     "Description": "A man with a low IQ witnesses and influences historical events.",
-    "Genre": { "Name": "Drama", "Description": "Emotional journey of a unique man." },
+    "Genre": {
+      "Name": "Drama",
+      "Description": "Emotional journey of a unique man."
+    },
     "Director": { "Name": "Robert Zemeckis", "BirthYear": 1951 },
     "Actors": ["Tom Hanks", "Robin Wright"],
-    "ImagePath": "/images/forrest_gump.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/61+Q6Rh3OQL._AC_SY679_.jpg",
     "ReleaseYear": 1994,
     "Featured": false,
     "Rating": 8.8
@@ -68,10 +83,13 @@
   {
     "Title": "Fight Club",
     "Description": "An office worker forms an underground fight club.",
-    "Genre": { "Name": "Drama", "Description": "Psychological themes and rebellion." },
+    "Genre": {
+      "Name": "Drama",
+      "Description": "Psychological themes and rebellion."
+    },
     "Director": { "Name": "David Fincher", "BirthYear": 1962 },
     "Actors": ["Brad Pitt", "Edward Norton"],
-    "ImagePath": "/images/fight_club.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/71YxnR3lABL._AC_SY679_.jpg",
     "ReleaseYear": 1999,
     "Featured": false,
     "Rating": 8.8
@@ -79,10 +97,13 @@
   {
     "Title": "Interstellar",
     "Description": "Astronauts travel through a wormhole to save humanity.",
-    "Genre": { "Name": "Sci-Fi", "Description": "Exploration of time and space." },
+    "Genre": {
+      "Name": "Sci-Fi",
+      "Description": "Exploration of time and space."
+    },
     "Director": { "Name": "Christopher Nolan", "BirthYear": 1970 },
     "Actors": ["Matthew McConaughey", "Anne Hathaway"],
-    "ImagePath": "/images/interstellar.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/81k8KxU3W-L._AC_SY679_.jpg",
     "ReleaseYear": 2014,
     "Featured": true,
     "Rating": 8.6
@@ -90,10 +111,13 @@
   {
     "Title": "Parasite",
     "Description": "A poor family schemes their way into a rich household.",
-    "Genre": { "Name": "Thriller", "Description": "Suspense and class tension." },
+    "Genre": {
+      "Name": "Thriller",
+      "Description": "Suspense and class tension."
+    },
     "Director": { "Name": "Bong Joon-ho", "BirthYear": 1969 },
     "Actors": ["Song Kang-ho", "Choi Woo-shik"],
-    "ImagePath": "/images/parasite.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/71c9QUe7BxL._AC_SY679_.jpg",
     "ReleaseYear": 2019,
     "Featured": false,
     "Rating": 8.6
@@ -101,10 +125,13 @@
   {
     "Title": "Spirited Away",
     "Description": "A girl navigates a spirit world to save her parents.",
-    "Genre": { "Name": "Fantasy", "Description": "Magical, otherworldly storytelling." },
+    "Genre": {
+      "Name": "Fantasy",
+      "Description": "Magical, otherworldly storytelling."
+    },
     "Director": { "Name": "Hayao Miyazaki", "BirthYear": 1941 },
     "Actors": ["Rumi Hiiragi", "Miyu Irino"],
-    "ImagePath": "/images/spirited_away.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/71n58nZPfkL._AC_SY679_.jpg",
     "ReleaseYear": 2001,
     "Featured": false,
     "Rating": 8.6
@@ -112,10 +139,13 @@
   {
     "Title": "The Matrix",
     "Description": "A hacker discovers reality is a simulation and joins a rebellion.",
-    "Genre": { "Name": "Sci-Fi", "Description": "Cyberpunk and philosophical themes." },
+    "Genre": {
+      "Name": "Sci-Fi",
+      "Description": "Cyberpunk and philosophical themes."
+    },
     "Director": { "Name": "Lana Wachowski", "BirthYear": 1965 },
     "Actors": ["Keanu Reeves", "Laurence Fishburne"],
-    "ImagePath": "/images/matrix.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/51vpnbwFHrL._AC_.jpg",
     "ReleaseYear": 1999,
     "Featured": true,
     "Rating": 8.7
@@ -123,10 +153,13 @@
   {
     "Title": "Whiplash",
     "Description": "An ambitious drummer trains under a ruthless instructor.",
-    "Genre": { "Name": "Drama", "Description": "Music and emotional intensity." },
+    "Genre": {
+      "Name": "Drama",
+      "Description": "Music and emotional intensity."
+    },
     "Director": { "Name": "Damien Chazelle", "BirthYear": 1985 },
     "Actors": ["Miles Teller", "J.K. Simmons"],
-    "ImagePath": "/images/whiplash.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/71NaiWzRN-L._AC_SY679_.jpg",
     "ReleaseYear": 2014,
     "Featured": false,
     "Rating": 8.5
@@ -137,7 +170,7 @@
     "Genre": { "Name": "Action", "Description": "Epic battles and heroism." },
     "Director": { "Name": "Ridley Scott", "BirthYear": 1937 },
     "Actors": ["Russell Crowe", "Joaquin Phoenix"],
-    "ImagePath": "/images/gladiator.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/51A9ll0Z7mL._AC_.jpg",
     "ReleaseYear": 2000,
     "Featured": true,
     "Rating": 8.5
@@ -148,7 +181,7 @@
     "Genre": { "Name": "Romance", "Description": "Love and tragedy at sea." },
     "Director": { "Name": "James Cameron", "BirthYear": 1954 },
     "Actors": ["Leonardo DiCaprio", "Kate Winslet"],
-    "ImagePath": "/images/titanic.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/71g40mlbinL._AC_SY679_.jpg",
     "ReleaseYear": 1997,
     "Featured": true,
     "Rating": 7.9
@@ -156,10 +189,13 @@
   {
     "Title": "The Lion King",
     "Description": "A young lion prince flees and returns to reclaim his kingdom.",
-    "Genre": { "Name": "Animation", "Description": "Animated family adventure." },
+    "Genre": {
+      "Name": "Animation",
+      "Description": "Animated family adventure."
+    },
     "Director": { "Name": "Roger Allers", "BirthYear": 1949 },
     "Actors": ["Matthew Broderick", "James Earl Jones"],
-    "ImagePath": "/images/lion_king.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/71jjPbxygfL._AC_SY679_.jpg",
     "ReleaseYear": 1994,
     "Featured": false,
     "Rating": 8.5
@@ -167,10 +203,13 @@
   {
     "Title": "The Social Network",
     "Description": "The story of the founding of Facebook.",
-    "Genre": { "Name": "Biography", "Description": "Tech entrepreneurship drama." },
+    "Genre": {
+      "Name": "Biography",
+      "Description": "Tech entrepreneurship drama."
+    },
     "Director": { "Name": "David Fincher", "BirthYear": 1962 },
     "Actors": ["Jesse Eisenberg", "Andrew Garfield"],
-    "ImagePath": "/images/social_network.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/61UymV-MKjL._AC_SY679_.jpg",
     "ReleaseYear": 2010,
     "Featured": false,
     "Rating": 7.7
@@ -178,10 +217,13 @@
   {
     "Title": "Joker",
     "Description": "A mentally troubled comedian's descent into madness and crime.",
-    "Genre": { "Name": "Drama", "Description": "Dark, psychological exploration." },
+    "Genre": {
+      "Name": "Drama",
+      "Description": "Dark, psychological exploration."
+    },
     "Director": { "Name": "Todd Phillips", "BirthYear": 1970 },
     "Actors": ["Joaquin Phoenix", "Robert De Niro"],
-    "ImagePath": "/images/joker.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/81p+xe8cbnL._AC_SY679_.jpg",
     "ReleaseYear": 2019,
     "Featured": false,
     "Rating": 8.4
@@ -189,10 +231,13 @@
   {
     "Title": "Up",
     "Description": "An old man fulfills a dream adventure with an unlikely companion.",
-    "Genre": { "Name": "Animation", "Description": "Heartwarming, family-friendly." },
+    "Genre": {
+      "Name": "Animation",
+      "Description": "Heartwarming, family-friendly."
+    },
     "Director": { "Name": "Pete Docter", "BirthYear": 1968 },
     "Actors": ["Ed Asner", "Jordan Nagai"],
-    "ImagePath": "/images/up.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/71n4fH9vDOM._AC_SY679_.jpg",
     "ReleaseYear": 2009,
     "Featured": false,
     "Rating": 8.2
@@ -200,10 +245,13 @@
   {
     "Title": "The Grand Budapest Hotel",
     "Description": "A concierge and a lobby boy become involved in a murder mystery.",
-    "Genre": { "Name": "Comedy", "Description": "Stylized, whimsical storytelling." },
+    "Genre": {
+      "Name": "Comedy",
+      "Description": "Stylized, whimsical storytelling."
+    },
     "Director": { "Name": "Wes Anderson", "BirthYear": 1969 },
     "Actors": ["Ralph Fiennes", "Tony Revolori"],
-    "ImagePath": "/images/grand_budapest.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/81dH7zL+lfL._AC_SY679_.jpg",
     "ReleaseYear": 2014,
     "Featured": false,
     "Rating": 8.1
@@ -211,10 +259,13 @@
   {
     "Title": "Avengers: Endgame",
     "Description": "Earth's mightiest heroes assemble to undo Thanos' actions.",
-    "Genre": { "Name": "Superhero", "Description": "Epic battles and Marvel characters." },
+    "Genre": {
+      "Name": "Superhero",
+      "Description": "Epic battles and Marvel characters."
+    },
     "Director": { "Name": "Anthony Russo", "BirthYear": 1970 },
     "Actors": ["Robert Downey Jr.", "Chris Evans", "Scarlett Johansson"],
-    "ImagePath": "/images/endgame.jpg",
+    "ImagePath": "https://m.media-amazon.com/images/I/81ExhpBEbHL._AC_SY679_.jpg",
     "ReleaseYear": 2019,
     "Featured": true,
     "Rating": 8.4

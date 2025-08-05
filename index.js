@@ -72,33 +72,12 @@ function initializeApp() {
     res.sendFile(path.join(__dirname, "public", "index.html"));
   });
 
-  app.get("/", (req, res) => {
-    res.send(`
-    <html>
-      <head><title>Movie API</title></head>
-      <body>
-        <h1>Welcome to the Movie API!</h1>
-        <ul>
-          <li>📄<a href="/public/documentation.html">HTML Documentation (Local)</a></li>
-          <li>🔧<a href="http://127.0.0.1:8080/api-docs/">Swagger Docs (Local)</a></li>
-          <li>🌐<a href="https://flix-fusion-api-movies-51cd1c6d37f8.herokuapp.com/documentation.html" target="_blank" 
-              rel="noopener"
->HTML Documentation (Deployed)</a></li>
-          <li>🚀<a href="https://flix-fusion-api-movies-51cd1c6d37f8.herokuapp.com/api-docs/" target="_blank" 
-              rel="noopener"
->Swagger Docs (Deployed)</a></li>
-        </ul>
-      </body>
-    </html>
-  `);
-  });
-
   // Example route using the Movie model
   // Get all movies
   app.get(
     "/movies",
     // Temporarily removed JWT auth - to allow public access, React app can access the movie list without needing authentication.
-    // passport.authenticate("jwt", { session: false }),
+    passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       console.log("Route was triggered"); // Confirmed route is called
       try {

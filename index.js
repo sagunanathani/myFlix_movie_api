@@ -205,11 +205,28 @@ function initializeApp() {
     }
   );
 
+  // Get all users (secured with JWT)
+  app.get(
+    "/users",
+    passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+      User.find()
+        .then((user) => {
+          res.json(user);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send("Error: " + err);
+        });
+    }
+  );
+
+  // Get user with username
   app.get(
     "/users/:username",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
-      User.findOne({ Username: req.params.username })
+      User.findOne({ username: req.params.username })
         .then((user) => {
           if (!user) {
             return res.status(404).send("User not found");

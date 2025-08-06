@@ -1,5 +1,5 @@
 {
-  "name": "movie_api",
+  "name": "myFlix_movie_api ",
   "version": "1.0.0",
   "description": "A simple Express-based REST API for managing and retrieving movie information",
   "keywords": [
@@ -11,13 +11,13 @@
     "restapi",
     "backend"
   ],
-  "homepage": "https://github.com/sagunanathani/movie_api#readme",
+  "homepage": "https://github.com/sagunanathani/myFlix_movie_api #readme",
   "bugs": {
-    "url": "https://github.com/sagunanathani/movie_api/issues"
+    "url": "https://github.com/sagunanathani/myFlix_movie_api /issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sagunanathani/movie_api.git"
+    "url": "git+https://github.com/sagunanathani/myFlix_movie_api.git"
   },
   "license": "ISC",
   "author": "Saguna Nathani",

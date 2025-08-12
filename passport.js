@@ -22,7 +22,7 @@ passport.use(
         console.log("Found user:", user); // Might show password hash in logs — be cautious!
         console.log(`Login attempt: ${username}`);
         if (!user) {
-          console.log('User not found.');
+          console.log("User not found.");
           return callback(null, false, {
             message: "Incorrect username or password.",
           });

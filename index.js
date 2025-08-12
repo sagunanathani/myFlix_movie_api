@@ -90,6 +90,27 @@ function initializeApp() {
     }
   );
 
+  // Get movie by ID
+  app.get("/movies/id/:movieID", async (req, res) => {
+    try {
+      const movieID = req.params.movieID;
+
+      // Validate if movieID is a valid ObjectId
+      if (!mongoose.Types.ObjectId.isValid(movieID)) {
+        return res.status(400).send("Invalid movie ID");
+      }
+
+      const movie = await Movie.findById(movieID);
+      if (movie) {
+        res.json(movie);
+      } else {
+        res.status(404).send("Movie not found");
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   // Endpoint: Return movie data by title
   app.get("/movies/:title", async (req, res) => {
     try {

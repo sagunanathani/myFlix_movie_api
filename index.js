@@ -270,31 +270,39 @@ function initializeApp() {
         "username",
         "Username contains non-alphanumeric characters - not allowed."
       ).isAlphanumeric(),
-      check("password", "Password is required").not().isEmpty(),
       check("email", "Email does not appear to be valid").isEmail(),
+      // Don't require password unless it's actually being changed
     ],
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       const errors = validationResult(req);
-
       if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
       }
-      // Use lowercase 'username' consistently - conditions to check
+
+      // Make sure the logged-in user is updating their own profile
       if (req.user.username !== req.params.username) {
         return res.status(400).send("Permission denied");
       }
+
       try {
+        const updateData = { ...req.body };
+
+        // ✅ Hash password if provided
+        if (updateData.password) {
+          updateData.password = await User.hashPassword(updateData.password);
+        }
+
         const updatedUser = await User.findOneAndUpdate(
           { username: req.params.username },
-          { $set: req.body },
-          { new: true } //This line makes sure that the updated document is returned
+          { $set: updateData },
+          { new: true }
         );
-        // Check if user was not found
+
         if (!updatedUser) {
           return res.status(404).send("User not found");
         }
-        // If found, send updated user data
+
         res.json(updatedUser);
       } catch (err) {
         res.status(500).send("Error: " + err.message);

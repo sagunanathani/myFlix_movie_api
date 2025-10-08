@@ -35,6 +35,7 @@ function initializeApp() {
 
   // CORS
   const allowedOrigins = [
+    "http://localhost:4200", // Allow requests for Angular app
     "http://localhost:8080",
     "http://testsite.com",
     "http://localhost:1234",

@@ -40,6 +40,7 @@ function initializeApp() {
     "http://testsite.com",
     "http://localhost:1234",
     "https://myflix-movies-sagunanathani.netlify.app",
+    "https://sagunanathani.github.io",
   ];
   app.use(
     cors({

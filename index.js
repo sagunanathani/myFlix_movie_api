@@ -1,23 +1,29 @@
-// Import the Express module and assign it to a constant called 'express'
-// This allows us to use Express functions and features
-// Require express and other needed modules
+/**
+ * @file index.js
+ * @title myFlix Movie API
+ * @author Saguna Nathani
+ * @version 1.0.0
+ * @description A RESTful API built with Express and MongoDB for managing movies, genres, directors, and users.
+ *  * Initializes Express, connects to MongoDB, configures middleware,
+ * authentication, and defines routes for movies and user management.
+ */
 
 // Load environment variables from .env
 require("dotenv").config();
 
 // Import dependencies
-const express = require("express"); // Express framework
-const mongoose = require("mongoose"); // MongoDB ORM
-const morgan = require("morgan"); //Step 6: Require Morgan middleware - Logs HTTP requests (for debugging and analytics)
-const cors = require("cors"); // Cross-origin handling
-const bcrypt = require("bcrypt"); // Password hashing
-const { check, validationResult } = require("express-validator"); // Input validation
+const express = require("express");
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+const { check, validationResult } = require("express-validator");
 const path = require("path");
 
 // Import models
 const { Movie, User } = require("./models");
 
-// Initialize the Express app
+// Initialize Express app
 const app = express();
 
 // Swagger setup
@@ -27,25 +33,32 @@ const swaggerDocument = YAML.load("./swagger/swagger.yaml");
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+/**
+ * Initializes the Express application by setting up middleware, routes, authentication, and error handling.
+ * @function initializeApp
+ * @returns {void}
+ */
 function initializeApp() {
-  // Middleware
+  // Middleware setup
   app.use(morgan("common"));
   app.use(express.static(path.join(__dirname, "public")));
   app.use(express.json());
 
-  // CORS
+  // Allowed origins for CORS
   const allowedOrigins = [
-    "http://localhost:4200", // Allow requests for Angular app
+    "http://localhost:4200",
     "http://localhost:8080",
     "http://testsite.com",
     "http://localhost:1234",
     "https://myflix-movies-sagunanathani.netlify.app",
     "https://sagunanathani.github.io",
   ];
+
+  // CORS configuration
   app.use(
     cors({
       origin: (origin, callback) => {
-        if (!origin) return callback(null, true); // allow requests like Postman
+        if (!origin) return callback(null, true);
         if (allowedOrigins.indexOf(origin) === -1) {
           return callback(
             new Error(
@@ -59,33 +72,33 @@ function initializeApp() {
     })
   );
 
-  // Authentication
-  require("./auth")(app); // Auth setup
-  // Passport setup (important to do *after* auth import)
+  // Authentication setup
+  require("./auth")(app);
   const passport = require("passport");
-  require("./passport"); // Passport strategies
+  require("./passport");
 
-  // Route: Default home message
-  /* app.get("/", (req, res) => {
-    res.send("Welcome to the Movie API!");
-  }); */
-
-  // Route for homepage
+  /**
+   * GET /
+   * @summary Serves the homepage of the API.
+   * @returns {HTML} 200 - The homepage HTML file
+   */
   app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
   });
 
-  // Example route using the Movie model
-  // Get all movies
+  /**
+   * GET /movies
+   * @summary Returns a list of all movies.
+   * @security JWT
+   * @returns {Array<Object>} 200 - A list of movie objects
+   * @returns {Error} 500 - Internal server error
+   */
   app.get(
     "/movies",
-    // Temporarily removed JWT auth - to allow public access, React app can access the movie list without needing authentication.
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
-      console.log("Route was triggered"); // Confirmed route is called
       try {
         const movies = await Movie.find();
-        console.log("Fetched movies:", movies); //Confirmed data retrieval
         res.json(movies);
       } catch (err) {
         res.status(500).json({ error: err.message });
@@ -93,208 +106,209 @@ function initializeApp() {
     }
   );
 
-  // Get movie by ID
+  /**
+   * GET /movies/id/{movieID}
+   * @summary Returns a movie by its MongoDB ID.
+   * @param {string} movieID.path - The ID of the movie
+   * @returns {Object} 200 - Movie object
+   * @returns {Error} 404 - Movie not found
+   */
   app.get("/movies/id/:movieID", async (req, res) => {
     try {
       const movieID = req.params.movieID;
-
-      // Validate if movieID is a valid ObjectId
       if (!mongoose.Types.ObjectId.isValid(movieID)) {
         return res.status(400).send("Invalid movie ID");
       }
-
       const movie = await Movie.findById(movieID);
-      if (movie) {
-        res.json(movie);
-      } else {
-        res.status(404).send("Movie not found");
-      }
+      movie ? res.json(movie) : res.status(404).send("Movie not found");
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   });
 
-  // Endpoint: Return movie data by title
+  /**
+   * GET /movies/{title}
+   * @summary Returns a movie by its title.
+   * @param {string} title.path - Movie title
+   * @returns {Object} 200 - Movie object
+   * @returns {Error} 404 - Movie not found
+   */
   app.get("/movies/:title", async (req, res) => {
     try {
       const movie = await Movie.findOne({ Title: req.params.title });
-      if (movie) {
-        res.json(movie);
-      } else {
-        res.status(404).send("Movie not found");
-      }
+      movie ? res.json(movie) : res.status(404).send("Movie not found");
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   });
 
-  // Route: Get genre info by name
+  /**
+   * GET /genres/{Name}
+   * @summary Returns data about a specific genre by name.
+   * @param {string} Name.path - Genre name
+   * @returns {Object} 200 - Genre object
+   * @returns {Error} 404 - Genre not found
+   */
   app.get("/genres/:Name", async (req, res) => {
     try {
       const movie = await Movie.findOne({ "Genre.Name": req.params.Name });
-      if (movie) {
-        res.json(movie.Genre);
-      } else {
-        res.status(404).send("Genre not found");
-      }
+      movie ? res.json(movie.Genre) : res.status(404).send("Genre not found");
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   });
 
-  // Route: Get director info by name
+  /**
+   * GET /directors/{name}
+   * @summary Returns data about a specific director by name.
+   * @param {string} name.path - Director name
+   * @returns {Object} 200 - Director object
+   * @returns {Error} 404 - Director not found
+   */
   app.get("/directors/:name", async (req, res) => {
     try {
       const movie = await Movie.findOne({ "Director.Name": req.params.name });
-      if (movie) {
-        res.json(movie.Director);
-      } else {
-        res.status(404).send("Director not found");
-      }
+      movie
+        ? res.json(movie.Director)
+        : res.status(404).send("Director not found");
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   });
 
-  // Route: Add a new movie to the database
+  /**
+   * POST /movies
+   * @summary Adds a new movie to the database.
+   * @param {Object} request.body.required - Movie data
+   * @returns {Object} 201 - Newly created movie
+   * @returns {Error} 400 - Invalid movie data
+   */
   app.post("/movies", async (req, res) => {
-    console.log("POST /movies route triggered");
     try {
       const newMovie = await Movie.create(req.body);
       res.status(201).json(newMovie);
     } catch (err) {
-      console.error("Error creating movie:", err.message);
       res.status(400).json({ error: err.message });
     }
   });
 
-  // Route: Register a new user
+  /**
+   * POST /users
+   * @summary Registers a new user.
+   * @param {Object} request.body.required - User info
+   * @param {string} request.body.username - Username
+   * @param {string} request.body.password - Password
+   * @param {string} request.body.email - Email
+   * @param {string} request.body.birthday - Birthday
+   * @returns {Object} 201 - Created user (without password)
+   * @returns {Error} 422 - Validation error
+   */
   app.post(
     "/users",
     [
-      check(
-        "username",
-        "Username contains non-alphanumeric characters - not allowed."
-      )
-        .isAlphanumeric()
-        .isLength({ min: 5 }),
-      check("email").isEmail().withMessage("Email must be valid"),
-      check("birthday").notEmpty().withMessage("Birthday is required"),
+      check("username").isAlphanumeric().isLength({ min: 5 }),
+      check("email").isEmail(),
+      check("birthday").notEmpty(),
       check("password")
         .exists()
-        .withMessage("Password is required")
         .custom((value) => {
-          if (!value || value.trim().length === 0) {
-            throw new Error("Password cannot be empty or just spaces");
-          }
+          if (!value.trim().length) throw new Error("Password cannot be empty");
           return true;
         }),
     ],
     async (req, res) => {
       const errors = validationResult(req);
-      //Error handling with validationResult()
-      if (!errors.isEmpty()) {
+      if (!errors.isEmpty())
         return res.status(422).json({ errors: errors.array() });
-      }
+
       try {
-        // Check if username already exists
         const existingUser = await User.findOne({
           username: req.body.username,
         });
-        if (existingUser) {
+        if (existingUser)
           return res.status(400).send(`${req.body.username} already exists`);
-        }
-        // Hash the password before saving
-        const hashedPassword = User.hashPassword(req.body.password);
 
-        // Create new user
+        const hashedPassword = User.hashPassword(req.body.password);
         const newUser = await User.create({
           username: req.body.username,
           password: hashedPassword,
           email: req.body.email,
           birthday: req.body.birthday,
         });
-        console.log("✅ User created:", newUser);
-        // Only return selected fields (not the password)
-        //const { username, email, birthday } = newUser;
         res.status(201).json({
           username: newUser.username,
           email: newUser.email,
           birthday: newUser.birthday,
         });
       } catch (err) {
-        console.error("Crash in /users:", err);
         res.status(500).send("Error: " + err.message);
       }
     }
   );
 
-  // Get all users (secured with JWT)
+  /**
+   * GET /users
+   * @summary Returns a list of all registered users.
+   * @security JWT
+   * @returns {Array<Object>} 200 - List of users
+   */
   app.get(
     "/users",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
       User.find()
-        .then((user) => {
-          res.json(user);
-        })
-        .catch((err) => {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        });
+        .then((users) => res.json(users))
+        .catch((err) => res.status(500).send("Error: " + err));
     }
   );
 
-  // Get user with username
+  /**
+   * GET /users/{username}
+   * @summary Returns a user by username.
+   * @param {string} username.path - The username
+   * @security JWT
+   * @returns {Object} 200 - User object
+   * @returns {Error} 404 - User not found
+   */
   app.get(
     "/users/:username",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
       User.findOne({ username: req.params.username })
-        .then((user) => {
-          if (!user) {
-            return res.status(404).send("User not found");
-          }
-          res.json(user);
-        })
-        .catch((err) => {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        });
+        .then((user) =>
+          user ? res.json(user) : res.status(404).send("User not found")
+        )
+        .catch((err) => res.status(500).send("Error: " + err));
     }
   );
 
-  // Route: Update a user's info
+  /**
+   * PUT /users/{username}
+   * @summary Updates a user's profile.
+   * @param {string} username.path - Username to update
+   * @param {Object} request.body - Updated user info
+   * @security JWT
+   * @returns {Object} 200 - Updated user object
+   */
   app.put(
     "/users/:username",
     [
-      check("username", "Username is required").isLength({ min: 5 }),
-      check(
-        "username",
-        "Username contains non-alphanumeric characters - not allowed."
-      ).isAlphanumeric(),
-      check("email", "Email does not appear to be valid").isEmail(),
-      // Don't require password unless it's actually being changed
+      check("username").isAlphanumeric().isLength({ min: 5 }),
+      check("email").isEmail(),
     ],
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       const errors = validationResult(req);
-      if (!errors.isEmpty()) {
+      if (!errors.isEmpty())
         return res.status(422).json({ errors: errors.array() });
-      }
 
-      // Make sure the logged-in user is updating their own profile
-      if (req.user.username !== req.params.username) {
+      if (req.user.username !== req.params.username)
         return res.status(400).send("Permission denied");
-      }
 
       try {
         const updateData = { ...req.body };
-
-        // ✅ Hash password if provided
-        if (updateData.password) {
+        if (updateData.password)
           updateData.password = await User.hashPassword(updateData.password);
-        }
 
         const updatedUser = await User.findOneAndUpdate(
           { username: req.params.username },
@@ -302,18 +316,23 @@ function initializeApp() {
           { new: true }
         );
 
-        if (!updatedUser) {
-          return res.status(404).send("User not found");
-        }
-
-        res.json(updatedUser);
+        updatedUser
+          ? res.json(updatedUser)
+          : res.status(404).send("User not found");
       } catch (err) {
         res.status(500).send("Error: " + err.message);
       }
     }
   );
 
-  // Route: Add movie to user's favorites
+  /**
+   * POST /users/{username}/movies/{movieID}
+   * @summary Adds a movie to the user's favorite movies.
+   * @param {string} username.path - The username
+   * @param {string} movieID.path - The movie ID
+   * @security JWT
+   * @returns {Object} 200 - Updated user with favorites
+   */
   app.post(
     "/users/:username/movies/:movieID",
     passport.authenticate("jwt", { session: false }),
@@ -331,7 +350,13 @@ function initializeApp() {
     }
   );
 
-  // Route: Remove movie from user's favorites
+  /**
+   * DELETE /users/{username}/movies/{movieID}
+   * @summary Removes a movie from the user's favorite list.
+   * @param {string} username.path - The username
+   * @param {string} movieID.path - The movie ID
+   * @returns {Object} 200 - Updated user without removed movie
+   */
   app.delete("/users/:username/movies/:movieID", async (req, res) => {
     try {
       const updatedUser = await User.findOneAndUpdate(
@@ -345,7 +370,12 @@ function initializeApp() {
     }
   });
 
-  // Route: Delete user account
+  /**
+   * DELETE /users/{username}
+   * @summary Deletes a user account.
+   * @param {string} username.path - Username to delete
+   * @returns {Object} 200 - Confirmation message
+   */
   app.delete("/users/:username", async (req, res) => {
     try {
       const deletedUser = await User.findOneAndDelete({
@@ -357,31 +387,34 @@ function initializeApp() {
     }
   });
 
-  // Middleware: Global error handler
-  // Middleware: Error-handling (logs all errors to terminal)
+  /**
+   * Global error handler middleware.
+   * Logs errors and returns a 500 status response.
+   * @function
+   * @param {Error} err - Error object
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   */
   app.use((err, req, res, next) => {
-    console.error(err.stack); // Log the full error stack trace
+    console.error(err.stack);
     res.status(500).send("Something went wrong!");
   });
 }
 
 const port = process.env.PORT || 8080;
 
-// 📦 Connect to MongoDB first
+// MongoDB connection
 mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.CONNECTION_URI)
   .then(() => {
     console.log("✅ MongoDB connected");
     console.log("Using DB:", mongoose.connection.name);
-
-    // ✅ Initialize the app AFTER DB is connected
     initializeApp();
-
-    // ✅ Start the server now that DB is ready
-    app.listen(port, "0.0.0.0", () => {
-      console.log(`🚀 Server running on port ${port}`);
-    });
+    app.listen(port, "0.0.0.0", () =>
+      console.log(`🚀 Server running on port ${port}`)
+    );
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
